@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, Alert, StyleSheet, TouchableOpacity } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
-import { useNavigation } from '@react-navigation/native';
-import { LineChart } from 'react-native-chart-kit';
-import { Dimensions } from 'react-native';
+import { View, Text, Button, Alert, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import Header from '../components/Header'; // Đảm bảo đường dẫn đúng
 
-const HomeScreen = () => {
-  const [balance, setBalance] = useState(0);
+const Home = ({ onNavigate, onLogout }) => {
+  const [balance] = useState(0);
   const [date, setDate] = useState('');
   const [notificationContent, setNotificationContent] = useState('Đang cập nhật...');
   const [showNotification, setShowNotification] = useState(false);
-  const navigation = useNavigation();
 
   useEffect(() => {
     // Cập nhật ngày
@@ -44,52 +40,23 @@ const HomeScreen = () => {
     Alert.alert('Thêm giao dịch!');
   };
 
-  const handleLogout = () => {
-    Alert.alert('Bạn đã đăng xuất!');
-    navigation.navigate('Login');
-  };
-
   const dismissNotification = () => {
     setShowNotification(false);
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <Header onNavigate={onNavigate} onLogout={onLogout} />
       <View style={styles.header}>
         <Text style={styles.title}>Số Dư: <Text style={styles.balance}>{balance} VND</Text></Text>
         <Text style={styles.date}>Ngày: {date}</Text>
       </View>
       <Button title="Thêm Giao Dịch" onPress={handleAddTransaction} />
-      
+
       <View style={styles.chartContainer}>
-        <LineChart
-          data={{
-            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-            datasets: [
-              {
-                data: [12, 19, 3, 5, 2, 3, 7],
-              },
-            ],
-          }}
-          width={Dimensions.get('window').width - 40} // from react-native
-          height={220}
-          yAxisLabel=""
-          chartConfig={{
-            backgroundColor: '#e26a00',
-            backgroundGradientFrom: '#fb8c00',
-            backgroundGradientTo: '#ffa726',
-            decimalPlaces: 2,
-            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            style: {
-              borderRadius: 16,
-            },
-          }}
-          // eslint-disable-next-line react-native/no-inline-styles
-          style={{
-            marginVertical: 8,
-            borderRadius: 16,
-          }}
-        />
+        <View style={styles.simpleChart}>
+          <Text style={styles.chartText}>Biểu đồ thu chi sẽ ở đây.</Text>
+        </View>
       </View>
 
       {showNotification && (
@@ -101,8 +68,6 @@ const HomeScreen = () => {
           </TouchableOpacity>
         </View>
       )}
-      
-      <Button title="Đăng Xuất" onPress={handleLogout} />
     </ScrollView>
   );
 };
@@ -128,6 +93,17 @@ const styles = StyleSheet.create({
   },
   chartContainer: {
     marginVertical: 20,
+  },
+  simpleChart: {
+    height: 220,
+    backgroundColor: '#e0e0e0',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 16,
+  },
+  chartText: {
+    fontSize: 16,
+    color: 'gray',
   },
   notificationBanner: {
     backgroundColor: '#ffcccb',
@@ -155,4 +131,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+export default Home;

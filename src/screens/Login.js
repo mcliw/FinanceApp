@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
 
-const Login = () => {
+const Login = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
   const handleLogin = () => {
     // Xử lý đăng nhập tại đây
     console.log('Đăng nhập với tài khoản:', username);
+    onLogin(); // Gọi hàm onLogin khi đăng nhập thành công
   };
 
   return (
